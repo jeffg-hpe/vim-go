@@ -68,10 +68,18 @@ function! s:GodocView(newposition, position, content) abort
       if &encoding == "utf-8"
         let borderchars = ['─', '│', '─', '│', '┌', '┐', '┘', '└']
       endif
-      call popup_atcursor(split(a:content, '\n'), {
-            \ 'padding': [1, 1, 1, 1],
+      let content = split(a:content, '\n')
+      if content[-1] == "Undocumented"
+        let content = content[:-3]
+      endif
+      if content == []
+        return
+      endif
+      call popup_atcursor(content, {
+            \ 'padding': [0, 1, 0, 1],
             \ 'borderchars': borderchars,
-            \ 'border': [1, 1, 1, 1],
+            \ 'border': [0, 0, 0, 0],
+            \ 'highlight': 'airline_term',
             \ })
     elseif has('nvim') && exists('*nvim_open_win')
       let lines = split(a:content, '\n')
